@@ -1,0 +1,31 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Inject API keys
+        run: |
+          sed -i "s/{{SPOTIFY_CLIENT_ID}}/${{ secrets.SPOTIFY_CLIENT_ID }}/g" proj/src/script.js
+          sed -i "s/{{TM_CLIENT_ID}}/${{ secrets.TM_CLIENT_ID }}/g" proj/src/script.js
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build site
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
