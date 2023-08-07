@@ -1,4 +1,7 @@
-import { SpotifyClientId, TMClientId } from './apiKeys.js';
+//import { SpotifyClientId, TMClientId } from './apiKeys.js';
+
+const SpotifyClientId = '{{SPOTIFY_CLIENT_ID}}';
+const TMClientId = '{{TM_CLIENT_ID}}';
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 
