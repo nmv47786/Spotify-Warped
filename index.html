@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>My Spotify Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        #profile {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin: 0;
+            margin-bottom: 20px;
+        }
+
+        #avatar img {
+            display: block;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        a {
+            color: #0070f3;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        #concertFlyer {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .flyerHeader {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .flyerDay {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .flyerHeadliner {
+            font-size: 20px;
+            font-weight: bold;
+            display: inline-block;
+            background-color: #f0f0f0;
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+
+        .flyerArtists {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .flyerArtist {
+            font-size: 16px;
+            text-align: center;
+            background-color: #f0f0f0;
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+
+        .headliner-container {
+            text-align: center;
+        }
+
+        #eventInfo {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .eventInfoHeader {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .eventInfoContent {
+            font-size: 16px;
+            text-align: center;
+        }
+
+        #topTracks, #topArtists, #recommendedTracks{
+            font-weight: bold;
+            white-space: pre-line;
+        }
+    </style>
+    <script src="src/script.js" type="module"></script>
+</head>
+<body>
+    <section id="profile">
+        <h1>Logged in as <span id="displayName"></span></h1>
+        <div id="avatar"></div>
+        <ul>
+            <li>User ID: <span id="id"></span></li>
+            <li>Followers: <span id="followers"></span></li>
+            <li>Email: <span id="email"></span></li>
+            <li>Spotify URI: <a id="uri" href="#"></a></li>
+            <li>Top Tracks: <br><span id="topTracks"></span></li>
+            <li>Recommended Tracks: <br><span id="recommendedTracks"></span></li>
+            <li>Top Artists: <br><span id="topArtists"></span></li>
+        </ul>
+    </section>
+
+    <section id="concertFlyer">
+        <div class="flyerHeader">Warpfest Concert Flyer</div>
+
+        <div class="flyerDay">Day 1</div>
+        <div class="headliner-container">
+            <div class="flyerHeadliner" id="headliner1"></div>
+        </div>
+        <div class="flyerArtists" id="day1Artists"></div>
+
+        <div class="flyerDay">Day 2</div>
+        <div class="headliner-container">
+            <div class="flyerHeadliner" id="headliner2"></div>
+        </div>
+        <div class="flyerArtists" id="day2Artists"></div>
+
+        <div class="flyerDay">Day 3</div>
+        <div class="headliner-container">
+            <div class="flyerHeadliner" id="headliner3"></div>
+        </div>
+        <div class="flyerArtists" id="day3Artists"></div>
+    </section>
+
+    <section id="eventInfo">
+        <div class="eventInfoHeader">Artists with Upcoming Concerts</div>
+        <div class="eventInfoContent">
+        </div>
+    </section>
+</body>
+</html>
