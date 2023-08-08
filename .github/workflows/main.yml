@@ -13,10 +13,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Inject API keys
+      - name: Set up environment variables
         run: |
-          sed -i "s/{{SPOTIFY_CLIENT_ID}}/${{ secrets.SPOTIFY_CLIENT_ID }}/g" src/script.js
-          sed -i "s/{{TM_CLIENT_ID}}/${{ secrets.TM_CLIENT_ID }}/g" src/script.js
+          echo "SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "TM_CLIENT_ID=${{ secrets.TM_CLIENT_ID }}" >> $GITHUB_ENV
+
+      - name: Inject environment variable names
+        run: |
+          sed -i "s|SPOTIFY_CLIENT_ID|${SPOTIFY_CLIENT_ID}|g" src/script.js
+          sed -i "s|TM_CLIENT_ID|${TM_CLIENT_ID}|g" src/script.js
 
       - name: Install dependencies
         run: npm install

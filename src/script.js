@@ -1,19 +1,23 @@
-//import { SpotifyClientId, TMClientId } from './apiKeys.js';
+import { SpotifyClientId, TMClientId } from './apiKeys.js';
 
-const SpotifyClientId = '{{SPOTIFY_CLIENT_ID}}';
-const TMClientId = '{{TM_CLIENT_ID}}';
+//const SpotifyClientId = process.env.SPOTIFY_CLIENT_ID;
+//const TMClientId = process.env.TM_CLIENT_ID;
+console.log(SpotifyClientId);
+console.log(TMClientId);
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
+run();
 
-if (!code) {
-    redirectToAuthCodeFlow(SpotifyClientId);
-} else {
-    const accessToken = getAccessToken(SpotifyClientId, code);
-    const profile = fetchProfile(accessToken);
-    
-    getAndUseUserLocation(accessToken, profile);
-    console.log(profile);
-    //populateUI(profile, accessToken, latitude, longitude);
+async function run() {
+    if (!code) {
+        redirectToAuthCodeFlow(SpotifyClientId);
+    } else {
+        const accessToken = await getAccessToken(SpotifyClientId, code);
+        const profile = await fetchProfile(accessToken); 
+        getAndUseUserLocation(accessToken, profile);
+        console.log(profile);
+        //populateUI(profile, accessToken, latitude, longitude);
+    }
 }
 
 export async function redirectToAuthCodeFlow(SpotifyClientId) {
