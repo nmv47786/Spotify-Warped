@@ -15,8 +15,8 @@ jobs:
 
       - name: Inject API keys
         run: |
-          sed -i "s/{{SPOTIFY_CLIENT_ID}}/${{ secrets.SPOTIFY_CLIENT_ID }}/g" proj/src/script.js
-          sed -i "s/{{TM_CLIENT_ID}}/${{ secrets.TM_CLIENT_ID }}/g" proj/src/script.js
+          sed -i "s/{{SPOTIFY_CLIENT_ID}}/${{ secrets.SPOTIFY_CLIENT_ID }}/g" src/script.js
+          sed -i "s/{{TM_CLIENT_ID}}/${{ secrets.TM_CLIENT_ID }}/g" src/script.js
 
       - name: Install dependencies
         run: npm install
