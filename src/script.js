@@ -1,7 +1,7 @@
-i//mport { SpotifyClientId, TMClientId } from './apiKeys.js';
+//import { SpotifyClientId, TMClientId } from './apiKeys.js';
 
-const SpotifyClientId = process.env.SPOTIFY_CLIENT_ID;
-const TMClientId = process.env.TM_CLIENT_ID;
+const SpotifyClientId = SPOTIFY_CLIENT_ID;
+const TMClientId = TM_CLIENT_ID;
 console.log(SpotifyClientId);
 console.log(TMClientId);
 const params = new URLSearchParams(window.location.search);
