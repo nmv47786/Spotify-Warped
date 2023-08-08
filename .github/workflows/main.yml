@@ -15,10 +15,19 @@ jobs:
 
       - name: Inject environment variable names
         run: |
-          sed -i "s|SPOTIFY_CLIENT_ID|${SPOTIFY_CLIENT_ID}|g" src/script.js
-          sed -i "s|TM_CLIENT_ID|${TM_CLIENT_ID}|g" src/script.js
-          echo "SPOTIFY_CLIENT_ID: $SPOTIFY_CLIENT_ID"
-          echo "TM_CLIENT_ID: $TM_CLIENT_ID"
+          sed -i "s|SPOTIFY_CLIENT_ID|${{ secrets.SPOTIFY_CLIENT_ID }}|g" src/script.js
+          sed -i "s|TM_CLIENT_ID|${{ secrets.TM_CLIENT_ID }}|g" src/script.js
+
+      - name: Print secret keys (for debugging)
+        run: |
+          echo "SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}"
+          echo "TM_CLIENT_ID: ${{ secrets.TM_CLIENT_ID }}"
+
+      - name: List secrets (for debugging)
+        run: |
+          echo "Available secrets:"
+          printenv | grep -E '^SPOTIFY_CLIENT_ID=|^TM_CLIENT_ID=|^GITHUB_TOKEN='
+        
 
       - name: Install dependencies
         run: npm install
@@ -26,8 +35,12 @@ jobs:
       - name: Build site
         run: npm run build
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+      - name: Deploy using SPOTIFY_CLIENT_ID (custom deployment command)
+        env:
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+        run: npm run dev
+
+      - name: Deploy using TM_CLIENT_ID (custom deployment command)
+        env:
+          TM_CLIENT_ID: ${{ secrets.TM_CLIENT_ID }}
+        run: npm run dev
