@@ -26,7 +26,7 @@ jobs:
       - name: List secrets (for debugging)
         run: |
           echo "Available secrets:"
-          printenv | grep -E '^SPOTIFY_CLIENT_ID=|^TM_CLIENT_ID=|^GITHUB_TOKEN='
+          env | grep -E '^SPOTIFY_CLIENT_ID=|^TM_CLIENT_ID='
         
 
       - name: Install dependencies
