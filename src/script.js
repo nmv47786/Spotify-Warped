@@ -8,8 +8,8 @@ const code = params.get("code");
 if (!code) {
     redirectToAuthCodeFlow(SpotifyClientId);
 } else {
-    const accessToken = await getAccessToken(SpotifyClientId, code);
-    const profile = await fetchProfile(accessToken);
+    const accessToken = getAccessToken(SpotifyClientId, code);
+    const profile = fetchProfile(accessToken);
     
     getAndUseUserLocation(accessToken, profile);
     console.log(profile);
