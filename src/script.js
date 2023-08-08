@@ -1,27 +1,23 @@
-// Import environment variables using import.meta.env
 const { VITE_SPOTIFY_CLIENT_ID, VITE_TM_CLIENT_ID } = import.meta.env;
 
 // Access and use environment variables in your code
 console.log('Spotify Client ID:', VITE_SPOTIFY_CLIENT_ID);
 console.log('Ticketmaster Client ID:', VITE_TM_CLIENT_ID);
-
 const SpotifyClientId = VITE_SPOTIFY_CLIENT_ID;
 const TMClientId = VITE_TM_CLIENT_ID;
 
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
-run();
 
-async function run() {
-    if (!code) {
-        redirectToAuthCodeFlow(SpotifyClientId);
-    } else {
-        const accessToken = await getAccessToken(SpotifyClientId, code);
-        const profile = await fetchProfile(accessToken); 
-        getAndUseUserLocation(accessToken, profile);
-        console.log(profile);
-        //populateUI(profile, accessToken, latitude, longitude);
-    }
+if (!code) {
+    redirectToAuthCodeFlow(SpotifyClientId);
+} else {
+    const accessToken = await getAccessToken(SpotifyClientId, code);
+    const profile = await fetchProfile(accessToken);
+    
+    getAndUseUserLocation(accessToken, profile);
+    console.log(profile);
+    //populateUI(profile, accessToken, latitude, longitude);
 }
 
 export async function redirectToAuthCodeFlow(SpotifyClientId) {
