@@ -1,5 +1,12 @@
-const SpotifyClientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-const TMClientId = import.meta.env.VITE_TM_CLIENT_ID;
+// Import environment variables using import.meta.env
+const { VITE_SPOTIFY_CLIENT_ID, VITE_TM_CLIENT_ID } = import.meta.env;
+
+// Access and use environment variables in your code
+console.log('Spotify Client ID:', VITE_SPOTIFY_CLIENT_ID);
+console.log('Ticketmaster Client ID:', VITE_TM_CLIENT_ID);
+
+const SpotifyClientId = VITE_SPOTIFY_CLIENT_ID;
+const TMClientId = VITE_TM_CLIENT_ID;
 
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
