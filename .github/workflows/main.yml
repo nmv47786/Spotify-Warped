@@ -17,9 +17,6 @@ jobs:
         run: |
           sed -i "s|SPOTIFY_CLIENT_ID|${SPOTIFY_CLIENT_ID}|g" src/script.js
           sed -i "s|TM_CLIENT_ID|${TM_CLIENT_ID}|g" src/script.js
-
-      - name: Print secret keys
-        run: |
           echo "SPOTIFY_CLIENT_ID: $SPOTIFY_CLIENT_ID"
           echo "TM_CLIENT_ID: $TM_CLIENT_ID"
 
