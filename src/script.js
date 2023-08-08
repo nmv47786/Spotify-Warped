@@ -1,9 +1,6 @@
-//import { SpotifyClientId, TMClientId } from './apiKeys.js';
+const SpotifyClientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
+const TMClientId = import.meta.env.VITE_TM_CLIENT_ID;
 
-const SpotifyClientId = "${SPOTIFY_CLIENT_ID}";
-const TMClientId = "${TM_CLIENT_ID}";
-console.log(SpotifyClientId);
-console.log(TMClientId);
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 run();
