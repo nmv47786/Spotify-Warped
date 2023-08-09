@@ -15,8 +15,8 @@ async function run() {
         const accessToken = await getAccessToken(SpotifyClientId, code);
         const profile = await fetchProfile(accessToken);
         
+        // populate UI in this
         getAndUseUserLocation(accessToken, profile);
-        //populateUI(profile, accessToken, latitude, longitude);
     }
 }
 
@@ -322,12 +322,14 @@ async function checkEventsForFestivalArtists(list, latitude, longitude, maxDista
             for (const eventInfo of eventInfoList) {
                 const { eventDate, eventCity, eventVenue, eventTime, eventUrl } = eventInfo;
 
+                const parsedTime = new Date(`2000-01-01T${eventTime}`);
+                const formattedTime = parsedTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
                 // Generate the setlist.fm URL for the artist
                 const setlistURL = generateSetlistURL(artist);
                 concertInfo.push(`
                     Event for ${artist} on ${eventDate} in ${eventCity}<br>
                     Venue: ${eventVenue}<br>
-                    Time: ${eventTime}<br>
+                    Time: ${formattedTime}<br>
                     <a href="${eventUrl}" target="_blank">Buy Tickets</a><br>
                     <a href="${setlistURL}" target="_blank">View Setlist Statistics</a>
                 `);
