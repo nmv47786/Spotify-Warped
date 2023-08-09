@@ -67,6 +67,7 @@ async function generateCodeChallenge(codeVerifier) {
 
 export async function getAccessToken(SpotifyClientId, code) {
     const verifier = localStorage.getItem("verifier");
+    console.log("verifier", verifier);
 
     const params = new URLSearchParams();
     params.append("client_id", SpotifyClientId);
@@ -82,6 +83,7 @@ export async function getAccessToken(SpotifyClientId, code) {
     });
 
     const { access_token } = await result.json();
+    console.log("result", access_token);
     return access_token;
 }
 
