@@ -9,7 +9,9 @@ console.log("SpotifyClientId: ", SpotifyClientId);
 console.log("Ticketmaster Client ID: ", TMClientId);
 
 const params = new URLSearchParams(window.location.search);
+console.log("params",params);
 const code = params.get("code");
+console.log("code",code);
 run();
 
 async function run() {
