@@ -1,8 +1,6 @@
 const { VITE_SPOTIFY_CLIENT_ID, VITE_TM_CLIENT_ID } = import.meta.env;
 
-// Access and use environment variables in your code
-console.log('Spotify Client ID:', VITE_SPOTIFY_CLIENT_ID);
-console.log('Ticketmaster Client ID:', VITE_TM_CLIENT_ID);
+// Access and use environment variables
 const SpotifyClientId = VITE_SPOTIFY_CLIENT_ID;
 const TMClientId = VITE_TM_CLIENT_ID;
 
@@ -13,8 +11,10 @@ run();
 async function run() {
     if (!code) {
         redirectToAuthCodeFlow(SpotifyClientId);
+        console.log("SpotifyClientId", SpotifyClientId);
     } else {
         const accessToken = await getAccessToken(SpotifyClientId, code);
+        console.log("access token", accessToken);
         const profile = await fetchProfile(accessToken);
         
         getAndUseUserLocation(accessToken, profile);
@@ -344,6 +344,11 @@ async function populateUI(profile, token, latitude, longitude) {
         profileImage.src = profile.images[0].url;
         document.getElementById("avatar").appendChild(profileImage);
         //document.getElementById("imgUrl").innerText = profile.images[0].url;
+    } else {
+        // Handle the case when there is no profile image
+        const defaultProfileImage = new Image(200, 200);
+        defaultProfileImage.src = "../public/default.png"; // Replace with your default image URL
+        document.getElementById("avatar").appendChild(defaultProfileImage);
     }
     document.getElementById("id").innerText = profile.id;
     document.getElementById("email").innerText = profile.email;
