@@ -14,8 +14,6 @@ APIs used:
     Geolocation
 
 Note:
-Data is analyzed through Spotify's AI rankings for the past 6 months and is not solely dependant on minutes and streams
-Default location is Atlanta and search radius is 100 miles or KM (I dont remember)
-This code will not run without .env
+Test Branch. Main Branch will stay up while this one hosts the changes.
 
 Author: Nikhil Vishwanath
