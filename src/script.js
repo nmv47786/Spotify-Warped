@@ -336,15 +336,27 @@ async function checkEventsForFestivalArtists(list, latitude, longitude, maxDista
         
                 // Generate the setlist.fm URL for the artist
                 const setlistURL = generateSetlistURL(artist);
-                
-                // Format the concert info with Event Name featuring Artist Name
-                const concertInfoFormatted = `
-                    ${eventName} featuring ${artist} on ${formattedDate} at ${formattedTime} <br>
-                    City: ${eventCity}<br>
-                    Venue: ${eventVenue}<br>
-                    <a href="${eventUrl}" target="_blank">Buy Tickets</a><br>
-                    <a href="${setlistURL}" target="_blank">View Setlist Statistics</a>
-                `;
+
+                const isArtistInEventName = eventName.toLowerCase().includes(artist.toLowerCase());
+                // Format the concert info
+                let concertInfoFormatted = '';
+                if (isArtistInEventName) {
+                    concertInfoFormatted = `
+                        ${eventName} on ${formattedDate} at ${formattedTime} <br>
+                        City: ${eventCity}<br>
+                        Venue: ${eventVenue}<br>
+                        <a href="${eventUrl}" target="_blank">Buy Tickets</a><br>
+                        <a href="${setlistURL}" target="_blank">View Setlist Statistics</a>
+                    `;
+                } else {
+                    concertInfoFormatted = `
+                        ${eventName} featuring ${artist} on ${formattedDate} at ${formattedTime} <br>
+                        City: ${eventCity}<br>
+                        Venue: ${eventVenue}<br>
+                        <a href="${eventUrl}" target="_blank">Buy Tickets</a><br>
+                        <a href="${setlistURL}" target="_blank">View Setlist Statistics</a>
+                    `;
+                }
                 concertInfo.push(concertInfoFormatted);
             }
         }
