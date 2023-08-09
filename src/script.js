@@ -287,6 +287,7 @@ async function searchEventsForArtist(artistName, latitude, longitude, maxDistanc
         const eventInfoList = [];
 
         for (const event of events) {
+            const eventName = event.name;
             const eventDate = event.dates.start.localDate;
             const eventCity = event._embedded.venues[0].city.name;
             const eventVenue = event._embedded.venues[0].name;
@@ -294,6 +295,7 @@ async function searchEventsForArtist(artistName, latitude, longitude, maxDistanc
             const eventUrl = event.url;
 
             eventInfoList.push({
+                eventName,
                 eventDate,
                 eventCity,
                 eventVenue,
@@ -310,6 +312,7 @@ async function searchEventsForArtist(artistName, latitude, longitude, maxDistanc
 
 
 // Function to check events for all artists in festivalList Set
+// Function to check events for all artists in festivalList Set
 async function checkEventsForFestivalArtists(list, latitude, longitude, maxDistance) {
     const concertInfo = [];
 
@@ -323,7 +326,7 @@ async function checkEventsForFestivalArtists(list, latitude, longitude, maxDista
             eventInfoList.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
         
             for (const eventInfo of eventInfoList) {
-                const { eventDate, eventCity, eventVenue, eventTime, eventUrl } = eventInfo;
+                const { eventName, eventDate, eventCity, eventVenue, eventTime, eventUrl } = eventInfo;
         
                 const parsedTime = new Date(`2000-01-01T${eventTime}`);
                 const formattedTime = parsedTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
@@ -333,18 +336,22 @@ async function checkEventsForFestivalArtists(list, latitude, longitude, maxDista
         
                 // Generate the setlist.fm URL for the artist
                 const setlistURL = generateSetlistURL(artist);
-                concertInfo.push(`
-                    Event for ${artist} on ${formattedDate} in ${eventCity}<br>
+                
+                // Format the concert info with Event Name featuring Artist Name
+                const concertInfoFormatted = `
+                    ${eventName} featuring ${artist} on ${formattedDate} at ${formattedTime} <br>
+                    City: ${eventCity}<br>
                     Venue: ${eventVenue}<br>
-                    Time: ${formattedTime}<br>
                     <a href="${eventUrl}" target="_blank">Buy Tickets</a><br>
                     <a href="${setlistURL}" target="_blank">View Setlist Statistics</a>
-                `);
+                `;
+                concertInfo.push(concertInfoFormatted);
             }
         }
     }
     return concertInfo;
 }
+
 
 function generateSetlistURL(artistName) {
     const encodedArtist = encodeURIComponent(artistName);
