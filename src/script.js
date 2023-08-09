@@ -319,15 +319,22 @@ async function checkEventsForFestivalArtists(list, latitude, longitude, maxDista
         const eventInfoList = await searchEventsForArtist(artist, latitude, longitude, maxDistance);
 
         if (eventInfoList && eventInfoList.length > 0) {
+            // Sort the eventInfoList by date in ascending order
+            eventInfoList.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
+        
             for (const eventInfo of eventInfoList) {
                 const { eventDate, eventCity, eventVenue, eventTime, eventUrl } = eventInfo;
-
+        
                 const parsedTime = new Date(`2000-01-01T${eventTime}`);
                 const formattedTime = parsedTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+        
+                const parsedDate = new Date(eventDate);
+                const formattedDate = parsedDate.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' });
+        
                 // Generate the setlist.fm URL for the artist
                 const setlistURL = generateSetlistURL(artist);
                 concertInfo.push(`
-                    Event for ${artist} on ${eventDate} in ${eventCity}<br>
+                    Event for ${artist} on ${formattedDate} in ${eventCity}<br>
                     Venue: ${eventVenue}<br>
                     Time: ${formattedTime}<br>
                     <a href="${eventUrl}" target="_blank">Buy Tickets</a><br>
@@ -418,18 +425,17 @@ async function populateUI(profile, token, latitude, longitude) {
             ...topArtists.map(({ name }) => name),
             ...recommendedArtists,
             ...additionalArtists.map(({ name }) => name),
-            ...lifetimeArtists.map(({ name }) => name),
         ]);
-        /*const concertArtists = new Set([
+        const concertArtists = new Set([
             ...allArtists.map(({ name }) => name),
             ...lifetimeArtists.map(({ name }) => name),
-        ]);*/
+        ]);
         const festivalList = Array.from(allArtists);
-        //const concertList = Array.from(concertArtists);
+        const concertList = Array.from(concertArtists);
         console.log("Festival List:", Array.from(festivalList));
         // Call the function to check events for all artists in festivalList Set
         const maxDistance = 100;
-        checkEventsForFestivalArtists(festivalList, latitude, longitude, maxDistance).then(concertInfo => {
+        checkEventsForFestivalArtists(concertList, latitude, longitude, maxDistance).then(concertInfo => {
             const eventInfoContainer = document.getElementById("eventInfo");
             if (concertInfo.length > 0) {
                 const eventInfoHtml = concertInfo.map(info => `<p>${info}</p>`).join(""); // Create HTML from concertInfo array
