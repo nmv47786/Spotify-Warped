@@ -3,28 +3,19 @@ const { VITE_SPOTIFY_CLIENT_ID, VITE_TM_CLIENT_ID } = import.meta.env;
 // Access and use environment variables
 const SpotifyClientId = VITE_SPOTIFY_CLIENT_ID;
 const TMClientId = VITE_TM_CLIENT_ID;
-console.log('Spotify Client ID:', VITE_SPOTIFY_CLIENT_ID);
-console.log('Ticketmaster Client ID:', VITE_TM_CLIENT_ID);
-console.log("SpotifyClientId: ", SpotifyClientId);
-console.log("Ticketmaster Client ID: ", TMClientId);
 
 const params = new URLSearchParams(window.location.search);
-console.log("params",params);
 const code = params.get("code");
-console.log("code",code);
 run();
 
 async function run() {
     if (!code) {
         redirectToAuthCodeFlow(SpotifyClientId);
-        console.log("SpotifyClientId", SpotifyClientId);
     } else {
         const accessToken = await getAccessToken(SpotifyClientId, code);
-        console.log("access token", accessToken);
         const profile = await fetchProfile(accessToken);
         
         getAndUseUserLocation(accessToken, profile);
-        console.log(profile);
         //populateUI(profile, accessToken, latitude, longitude);
     }
 }
@@ -68,7 +59,6 @@ async function generateCodeChallenge(codeVerifier) {
 
 export async function getAccessToken(SpotifyClientId, code) {
     const verifier = localStorage.getItem("verifier");
-    console.log("verifier", verifier);
 
     const params = new URLSearchParams();
     params.append("client_id", SpotifyClientId);
@@ -78,7 +68,6 @@ export async function getAccessToken(SpotifyClientId, code) {
     params.append("redirect_uri", "https://spotify-warped.netlify.app/callback");
     params.append("code_verifier", verifier);
     const body = new URLSearchParams(params).toString();
-    console.log("body",body);
     const result = await fetch("https://accounts.spotify.com/api/token", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -86,7 +75,6 @@ export async function getAccessToken(SpotifyClientId, code) {
     });
 
     const { access_token } = await result.json();
-    console.log("result", result);
     return access_token;
 }
 
@@ -186,6 +174,12 @@ async function getTopArtists(token){
 async function moreArtists(token){
     // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
     const result = await fetchWebApi('v1/me/top/artists?time_range=short_term', 'GET', undefined, token);
+    return result.items;
+}
+
+async function evenMoreArtists(token){
+    // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
+    const result = await fetchWebApi('v1/me/top/artists?time_range=long_term', 'GET', undefined, token);
     return result.items;
 }
 
@@ -414,13 +408,15 @@ async function populateUI(profile, token, latitude, longitude) {
     if (Array.isArray(topArtists) && topArtists.length > 0) {
         const recommendedArtists = await getRecommendedArtists(token, topArtistIds);
         const additionalArtists = await moreArtists(token);
+        const lifetimeArtists = await evenMoreArtists(token);
         //console.log("Recommended Artists:", recommendedArtists);
 
         // Combine topArtists, recommendedArtists, and artists from topTracks
         const allArtists = new Set([
             ...topArtists.map(({ name }) => name),
             ...recommendedArtists,
-            ...additionalArtists.map(({ name }) => name)
+            ...additionalArtists.map(({ name }) => name),
+            ...lifetimeArtists.map(({ name }) => name),
         ]);
         const festivalList = Array.from(allArtists);
         console.log("Festival List:", Array.from(festivalList));
