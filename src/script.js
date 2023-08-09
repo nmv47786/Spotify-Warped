@@ -416,13 +416,17 @@ async function populateUI(profile, token, latitude, longitude) {
             ...topArtists.map(({ name }) => name),
             ...recommendedArtists,
             ...additionalArtists.map(({ name }) => name),
+        ]);
+        const concertArtists = new Set([
+            ...allArtists.map(({ name }) => name),
             ...lifetimeArtists.map(({ name }) => name),
         ]);
         const festivalList = Array.from(allArtists);
+        const concertList = Array.from(concertArtists);
         console.log("Festival List:", Array.from(festivalList));
         // Call the function to check events for all artists in festivalList Set
         const maxDistance = 100;
-        checkEventsForFestivalArtists(festivalList, latitude, longitude, maxDistance).then(concertInfo => {
+        checkEventsForFestivalArtists(concertList, latitude, longitude, maxDistance).then(concertInfo => {
             const eventInfoContainer = document.getElementById("eventInfo");
             if (concertInfo.length > 0) {
                 const eventInfoHtml = concertInfo.map(info => `<p>${info}</p>`).join(""); // Create HTML from concertInfo array
