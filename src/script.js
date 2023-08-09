@@ -8,16 +8,19 @@ const TMClientId = VITE_TM_CLIENT_ID;
 
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
+run();
 
-if (!code) {
-    redirectToAuthCodeFlow(SpotifyClientId);
-} else {
-    const accessToken = await getAccessToken(SpotifyClientId, code);
-    const profile = await fetchProfile(accessToken);
-    
-    getAndUseUserLocation(accessToken, profile);
-    console.log(profile);
-    //populateUI(profile, accessToken, latitude, longitude);
+async function run() {
+    if (!code) {
+        redirectToAuthCodeFlow(SpotifyClientId);
+    } else {
+        const accessToken = await getAccessToken(SpotifyClientId, code);
+        const profile = await fetchProfile(accessToken);
+        
+        getAndUseUserLocation(accessToken, profile);
+        console.log(profile);
+        //populateUI(profile, accessToken, latitude, longitude);
+    }
 }
 
 export async function redirectToAuthCodeFlow(SpotifyClientId) {
