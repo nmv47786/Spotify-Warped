@@ -73,7 +73,8 @@ export async function getAccessToken(SpotifyClientId, code) {
     params.append("client_id", SpotifyClientId);
     params.append("grant_type", "authorization_code");
     params.append("code", code);
-    params.append("redirect_uri", "http://localhost:5173/callback");
+    //params.append("redirect_uri", "http://localhost:5173/callback");
+    params.append("redirect_uri", "https://storied-hamster-3f8335.netlify.app/callback");
     params.append("code_verifier", verifier);
 
     const result = await fetch("https://accounts.spotify.com/api/token", {
