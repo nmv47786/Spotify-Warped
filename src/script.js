@@ -310,8 +310,6 @@ async function searchEventsForArtist(artistName, latitude, longitude, maxDistanc
     }
 }
 
-
-// Function to check events for all artists in festivalList Set
 // Function to check events for all artists in festivalList Set
 async function checkEventsForFestivalArtists(list, latitude, longitude, maxDistance) {
     const concertInfo = [];
@@ -329,7 +327,9 @@ async function checkEventsForFestivalArtists(list, latitude, longitude, maxDista
                 const { eventName, eventDate, eventCity, eventVenue, eventTime, eventUrl } = eventInfo;
         
                 const parsedTime = new Date(`2000-01-01T${eventTime}`);
-                const formattedTime = parsedTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+                const formattedTime = parsedTime.toString() !== 'undefined'
+                    ? parsedTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+                    : '';
         
                 const parsedDate = new Date(eventDate);
                 const formattedDate = parsedDate.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' });
@@ -342,7 +342,7 @@ async function checkEventsForFestivalArtists(list, latitude, longitude, maxDista
                 let concertInfoFormatted = '';
                 if (isArtistInEventName) {
                     concertInfoFormatted = `
-                        ${eventName} on ${formattedDate} at ${formattedTime} <br>
+                        ${eventName} on ${formattedDate} ${formattedTime ? `at ${formattedTime}` : ''} <br>
                         City: ${eventCity}<br>
                         Venue: ${eventVenue}<br>
                         <a href="${eventUrl}" target="_blank">Buy Tickets</a><br>
@@ -350,7 +350,7 @@ async function checkEventsForFestivalArtists(list, latitude, longitude, maxDista
                     `;
                 } else {
                     concertInfoFormatted = `
-                        ${eventName} featuring ${artist} on ${formattedDate} at ${formattedTime} <br>
+                        ${eventName} featuring ${artist} on ${formattedDate} ${formattedTime ? `at ${formattedTime}` : ''} <br>
                         City: ${eventCity}<br>
                         Venue: ${eventVenue}<br>
                         <a href="${eventUrl}" target="_blank">Buy Tickets</a><br>
