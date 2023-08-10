@@ -31,7 +31,7 @@ export async function redirectToAuthCodeFlow(SpotifyClientId) {
     params.append("response_type", "code");
     //params.append("redirect_uri", "http://localhost:5173/callback");
     params.append("redirect_uri", "https://concertfinder.netlify.app/callback");
-    params.append("scope", "user-read-private user-read-email user-top-read user-follow-read");
+    params.append("scope", "user-read-private user-read-email user-top-read user-follow-read playlist-modify-public playlist-modify-private");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
 
@@ -152,7 +152,6 @@ async function fetchWebApi(endpoint, method, body, token) {
         throw error; // Rethrow the error so it can be caught by the caller.
     }
 }
-
   
 async function getTopTracks(token){
     // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
@@ -188,6 +187,23 @@ async function getArtistID(token) {
     return result.items.map((artist) => artist.id);
 }
 
+async function createPlaylist(trackURIs, userId, token) {
+    //const trackURIs = await getTrackURIs(songs, token);
+    console.log("trackURIs", trackURIs);
+    
+    const playlist = await fetchWebApi(
+        `v1/users/${userId}/playlists`, 'POST', {
+            "name": "My New Favorite Playlist",
+            "description": "Playlist created by concertfinder",
+            "public": false
+        }, token);
+
+    await fetchWebApi(
+        `v1/playlists/${playlist.id}/tracks?uris=${trackURIs.join(',')}`,
+        'POST', undefined, token);
+
+    return playlist;
+}
 
   async function getRecommendedTracks(token, IDs) {
     const recommendedTracks = [];
@@ -310,8 +326,6 @@ async function searchEventsForArtist(artistName, latitude, longitude, maxDistanc
     }
 }
 
-
-// Function to check events for all artists in festivalList Set
 // Function to check events for all artists in festivalList Set
 async function checkEventsForFestivalArtists(list, latitude, longitude, maxDistance) {
     const concertInfo = [];
@@ -329,8 +343,9 @@ async function checkEventsForFestivalArtists(list, latitude, longitude, maxDista
                 const { eventName, eventDate, eventCity, eventVenue, eventTime, eventUrl } = eventInfo;
         
                 const parsedTime = new Date(`2000-01-01T${eventTime}`);
-                const formattedTime = parsedTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-        
+                const formattedTime = parsedTime.toString() !== 'Invalid Date'
+                    ? parsedTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+                    : '';        
                 const parsedDate = new Date(eventDate);
                 const formattedDate = parsedDate.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' });
         
@@ -342,7 +357,7 @@ async function checkEventsForFestivalArtists(list, latitude, longitude, maxDista
                 let concertInfoFormatted = '';
                 if (isArtistInEventName) {
                     concertInfoFormatted = `
-                        ${eventName} on ${formattedDate} at ${formattedTime} <br>
+                        ${eventName} on ${formattedDate} ${formattedTime ? `at ${formattedTime}` : ''} <br>
                         City: ${eventCity}<br>
                         Venue: ${eventVenue}<br>
                         <a href="${eventUrl}" target="_blank">Buy Tickets</a><br>
@@ -350,7 +365,7 @@ async function checkEventsForFestivalArtists(list, latitude, longitude, maxDista
                     `;
                 } else {
                     concertInfoFormatted = `
-                        ${eventName} featuring ${artist} on ${formattedDate} at ${formattedTime} <br>
+                        ${eventName} featuring ${artist} on ${formattedDate} ${formattedTime ? `at ${formattedTime}` : ''} <br>
                         City: ${eventCity}<br>
                         Venue: ${eventVenue}<br>
                         <a href="${eventUrl}" target="_blank">Buy Tickets</a><br>
@@ -424,6 +439,23 @@ async function populateUI(profile, token, latitude, longitude) {
         //console.log("Recommended Tracks List:", recommendedTracksList); // Check the recommended tracks list in the console.
   
         document.getElementById("recommendedTracks").innerText = recommendedTracksList.join("\n");
+        const playlistTracksList = [...topTracks, ...recommendedTracks].map(track => track.uri);
+        console.log("playlistTracks", playlistTracksList)
+        const createPlaylistButton = document.getElementById('createPlaylistButton');
+        const playlistCreatedMessage = document.getElementById('playlistCreatedMessage');
+
+        createPlaylistButton.addEventListener('click', async () => {
+            try {
+                const createdPlaylist = await createPlaylist(playlistTracksList, profile.id, token);
+                // Hide the button after it has been clicked
+                createPlaylistButton.style.display = 'none';
+            // Display the playlist created message
+            playlistCreatedMessage.textContent = `A playlist named "${createdPlaylist.name}" has been created.`;
+        } catch (error) {
+            console.error('Error creating playlist:', error);
+        }
+    });
+
       } else {
         document.getElementById("recommendedTracks").innerText = "No recommended tracks found.";
       }
