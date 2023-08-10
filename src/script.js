@@ -212,8 +212,9 @@ async function getTrackURIs(songs, token) {
     return trackURIs;
 }
 
-async function createPlaylist(songs, userId, token){
+async function createPlaylist(songs, token){
     const trackURI = await getTrackURIs(songs, token);
+    const { id: userId } = await fetchWebApi('v1/me', 'GET')
 
     const playlist = await fetchWebApi(
       `v1/users/${userId}/playlists`, 'POST', {
@@ -465,9 +466,10 @@ async function populateUI(profile, token, latitude, longitude) {
   
         document.getElementById("recommendedTracks").innerText = recommendedTracksList.join("\n");
         const playlistTracks = topTracks + recommendedTracks;
+        console.log("plalistTracks", playlistTracks)
         //const createdPlaylist = await createPlaylist(playlistTracks, profile.id, token);
         document.getElementById('createPlaylistButton').addEventListener('click', () => {
-            createPlaylist(playlistTracks, profile.id, token);
+            createPlaylist(playlistTracks, token);
         });
       } else {
         document.getElementById("recommendedTracks").innerText = "No recommended tracks found.";
