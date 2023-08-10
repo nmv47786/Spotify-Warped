@@ -203,6 +203,8 @@ async function getTrackURIs(songs, token) {
 
     for (const song of songs) {
         const { title, artist } = song;
+        console.log("title",title);
+        console.log("artist",artist);
         const trackURI = await searchTrackURI(title, artist, token);
 
         if (trackURI) {
