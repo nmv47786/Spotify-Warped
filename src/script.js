@@ -473,8 +473,11 @@ async function populateUI(profile, token, latitude, longitude) {
   
         document.getElementById("recommendedTracks").innerText = recommendedTracksList.join("\n");
         const playlistTracks = topTracks + recommendedTracks;
-        console.log("playlistTracks", playlistTracks)
-        const createdPlaylist = await createPlaylist(playlistTracks, profile.id, token);
+        const playlistTracksList = playlistTracks.map(({ name, artists }) =>
+            `${name} by ${artists.map(artist => artist.name).join(', ')}`
+        );
+        console.log("playlistTracks", playlistTracksList)
+        const createdPlaylist = await createPlaylist(playlistTracksList, profile.id, token);
         console.log(createdPlaylist.name, createdPlaylist.id);
       } else {
         document.getElementById("recommendedTracks").innerText = "No recommended tracks found.";
