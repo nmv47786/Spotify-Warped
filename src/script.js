@@ -222,14 +222,14 @@ async function getAudioFeatures(token, songs) {
     const audioFeatures = result.audio_features;
     
     console.log(audioFeatures);
-    const danceability = 0;
-    const energy = 0;
-    const valence = 0;
-    const speechiness = 0;
-    const instrumentalness = 0;
-    const acousticness = 0;
-    const popularity = 0;
-    const loudness = 0;
+    let danceability = 0;
+    let energy = 0;
+    let valence = 0;
+    let speechiness = 0;
+    let instrumentalness = 0;
+    let acousticness = 0;
+    let popularity = 0;
+    let loudness = 0;
     audioFeatures.forEach(song => {
         danceability += song.danceability;
         energy += song.energy;
