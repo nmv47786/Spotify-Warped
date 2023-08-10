@@ -456,7 +456,16 @@ async function populateUI(profile, token, latitude, longitude) {
         //console.log("Recommended Tracks List:", recommendedTracksList); // Check the recommended tracks list in the console.
   
         document.getElementById("recommendedTracks").innerText = recommendedTracksList.join("\n");
-        const playlistTracksList = [...topTracks, ...recommendedTracks].map(track => track.uri);
+        //const playlistTracksList = [...topTracks, ...recommendedTracks].map(track => track.uri);
+        const selectedTopTracks = topTracks.sort(() => Math.random() - 0.5).slice(0, 7);
+        const playlistTracksList = [...selectedTopTracks, ...recommendedTracks].map(track => track.uri);
+
+        // Shuffle the playlistTracksList using Fisher-Yates shuffle algorithm
+        for (let i = playlistTracksList.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [playlistTracksList[i], playlistTracksList[j]] = [playlistTracksList[j], playlistTracksList[i]];
+        }
+
         console.log("playlistTracks", playlistTracksList)
         const createPlaylistButton = document.getElementById('createPlaylistButton');
         const playlistCreatedMessage = document.getElementById('playlistCreatedMessage');
