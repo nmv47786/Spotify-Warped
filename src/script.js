@@ -186,7 +186,7 @@ async function getArtistID(token) {
     const result = await fetchWebApi('v1/me/top/artists', 'GET', undefined, token);
     return result.items.map((artist) => artist.id);
 }
-
+/*
 async function searchTrackURI(songTitle, artistName, token) {
     console.log("song: ", songTitle);
     const result = await fetchWebApi(`v1/search?type=track&q=${encodeURIComponent(`${songTitle} ${artistName}`)}`, 'GET', undefined, token);
@@ -211,7 +211,7 @@ async function getTrackURIs(songs, token) {
         }
     }
     return trackURIs; // Return the array of track URIs
-}
+}*/
 
 async function createPlaylist(trackURIs, userId, token) {
     //const trackURIs = await getTrackURIs(songs, token);
