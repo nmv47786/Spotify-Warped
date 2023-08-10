@@ -187,11 +187,10 @@ async function getArtistID(token) {
     return result.items.map((artist) => artist.id);
 }
 
-// Function to search for a track and retrieve its URI
 async function searchTrackURI(songTitle, artistName, token) {
     console.log("song: ", songTitle);
     const result = await fetchWebApi(`v1/search?type=track&q=${encodeURIComponent(`${songTitle} ${artistName}`)}`, 'GET', undefined, token);
-    console.log("result",result);
+    console.log("result", result);
     const data = await result.json();
     const trackURI = data.tracks.items[0]?.uri; // Get the URI of the first track in the search results
     return trackURI;
@@ -202,42 +201,36 @@ async function getTrackURIs(songs, token) {
     const trackURIs = [];
     for (const song of songs) {
         const { title, artist } = song;
-        console.log("title",title);
-        console.log("artist",artist);
+        console.log("title", title);
+        console.log("artist", artist);
         const trackURI = await searchTrackURI(title, artist, token);
 
         if (trackURI) {
             trackURIs.push(trackURI);
         }
     }
-    const tracksUri = [
-        'spotify:track:172tU0qMGx87pKgTK05JDH','spotify:track:7fEoXCZTZFosUFvFQg1BmW','spotify:track:2jpXew4tUnqHiH7Uaj4Ioq','spotify:track:7Jhin13w5nIiEI1y6yaMrU','spotify:track:38zW3zHLM2OtUpIzJypgNH','spotify:track:3ypKN0aPr83dhDJqMIQs4f','spotify:track:0c7BcXM6yCifeWCmGiUstq','spotify:track:3RU0RnVc1SkyMLGUw4UYn2','spotify:track:1fIQ5RjU5YqwG18vTxyyHV','spotify:track:78B5EMzl6EWDdrucL6Aj9h'
-      ];
-    return tracksUri;
+    return trackURIs; // Return the array of track URIs
 }
 
-async function createPlaylist(songs, token){
-    const trackURI = await getTrackURIs(songs, token);
-    console.log("trackURI",trackURI);
-    const { id: userId } = await fetchWebApi('v1/me', 'GET');
-    console.log("userId", userId);
-
+async function createPlaylist(songs, userId, token) {
+    const trackURIs = await getTrackURIs(songs, token);
+    console.log("trackURIs", trackURIs);
+    
     const playlist = await fetchWebApi(
-      `v1/users/${userId}/playlists`, 'POST', {
-        "name": "My New Favorite Playlist",
-        "description": "Playlist created by concertfinder",
-        "public": false
-    }, token)
-  
+        `v1/users/${userId}/playlists`, 'POST', {
+            "name": "My New Favorite Playlist",
+            "description": "Playlist created by concertfinder",
+            "public": false
+        }, token);
+
     await fetchWebApi(
-      `v1/playlists/${playlist.id}/tracks?uris=${trackURI.join(',')}`,
-      'POST', undefined, token
-    );
-  
+        `v1/playlists/${playlist.id}/tracks?uris=${trackURIs.join(',')}`,
+        'POST', undefined, token);
+
     console.log("name", playlist.name);
     console.log("id", playlist.id);
     return playlist;
-  }
+}
 
   async function getRecommendedTracks(token, IDs) {
     const recommendedTracks = [];
