@@ -159,12 +159,6 @@ async function getTopTracks(token){
     return result.items;
 }
 
-/*
-async function getTrackID(token) {
-    const result = await fetchWebApi('v1/me/top/tracks', 'GET', undefined, token);
-    return result.items.map((track) => track.id);
-}*/
-
 async function getTopArtists(token){
     // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
     const result = await fetchWebApi('v1/me/top/artists', 'GET', undefined, token);
@@ -221,6 +215,43 @@ async function doesPlaylistExist(userId, playlistName, token) {
         `v1/users/${userId}/playlists`, 'GET', undefined, token);
 
     return playlists.items.some(playlist => playlist.name === playlistName);
+}
+
+async function getAudioFeatures(token, songs) {
+    const result = await fetchWebApi(`v1/audio-features?ids=${songs.join(',')}`, 'GET', undefined, token);
+    const audioFeatures = result.audio_features;
+
+    const danceability = 0;
+    const energy = 0;
+    const valence = 0;
+    const speechiness = 0;
+    const instrumentalness = 0;
+    const acousticness = 0;
+    const popularity = 0;
+    const loudness = 0;
+    audioFeatures.forEach(song => {
+        danceability += song.danceability;
+        energy += song.energy;
+        valence += song.valence;
+        speechiness += song.speechiness;
+        instrumentalness += song.instrumentalness;
+        acousticness += song.acousticness;
+        popularity += song.popularity;
+        loudness += song.loudness;
+    });
+
+    const averageFeatures = {
+        danceability: danceability / numSongs,
+        energy: energy / numSongs,
+        valence: valence / numSongs,
+        speechiness: speechiness / numSongs,
+        instrumentalness: instrumentalness / numSongs,
+        acousticness: acousticness / numSongs,
+        popularity: popularity / numSongs,
+        loudness: loudness / numSongs
+    };
+
+    return averageFeatures;
 }
 
   async function getRecommendedTracks(token, IDs) {
@@ -413,7 +444,7 @@ async function populateUI(profile, token, latitude, longitude) {
     } else {
         // Handle the case when there is no profile image
         const defaultProfileImage = new Image(200, 200);
-        defaultProfileImage.src = "../public/default.png"; // Replace with your default image URL
+        defaultProfileImage.src = "../public/default.png";
         document.getElementById("avatar").appendChild(defaultProfileImage);
     }
     document.getElementById("id").innerText = profile.id;
@@ -429,6 +460,15 @@ async function populateUI(profile, token, latitude, longitude) {
             `${name} by ${artists.map(artist => artist.name).join(', ')}`
         );
         document.getElementById("topTracks").innerText = topTracksList.join("\n");
+        const features = await getAudioFeatures(token, topTracks.map(({ id }) => id));
+        console.log("danceability", features.danceability);
+        console.log("energy", features.energy);
+        console.log("valence", features.valence);
+        console.log("speechiness", features.speechiness);
+        console.log("instrumentalness", features.instrumentalness);
+        console.log("acousticness", features.acousticness);
+        console.log("popularity", features.popularity);
+        console.log("loudness", features.loudness);
     } else {
         document.getElementById("topTracks").innerText = "No top tracks found.";
     }
@@ -474,10 +514,20 @@ async function populateUI(profile, token, latitude, longitude) {
         createPlaylistButton.addEventListener('click', async () => {
             try {
                 const createdPlaylist = await createPlaylist(playlistTracksList, profile.id, token);
+
+                const features = await getAudioFeatures(token, playlistTracksList.map(({ id }) => id));
+                console.log("danceability", features.danceability);
+                console.log("energy", features.energy);
+                console.log("valence", features.valence);
+                console.log("speechiness", features.speechiness);
+                console.log("instrumentalness", features.instrumentalness);
+                console.log("acousticness", features.acousticness);
+                console.log("popularity", features.popularity);
+                console.log("loudness", features.loudness);
                 // Hide the button after it has been clicked
                 createPlaylistButton.style.display = 'none';
-            // Display the playlist created message
-            playlistCreatedMessage.textContent = `A playlist named "${createdPlaylist.name}" has been created.`;
+                // Display the playlist created message
+                playlistCreatedMessage.textContent = `A playlist named "${createdPlaylist.name}" has been created.`;
         } catch (error) {
             console.error('Error creating playlist:', error);
         }
