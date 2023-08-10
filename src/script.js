@@ -186,32 +186,6 @@ async function getArtistID(token) {
     const result = await fetchWebApi('v1/me/top/artists', 'GET', undefined, token);
     return result.items.map((artist) => artist.id);
 }
-/*
-async function searchTrackURI(songTitle, artistName, token) {
-    console.log("song: ", songTitle);
-    const result = await fetchWebApi(`v1/search?type=track&q=${encodeURIComponent(`${songTitle} ${artistName}`)}`, 'GET', undefined, token);
-    console.log("result", result);
-    const data = await result.json();
-    const trackURI = data.tracks.items[0]?.uri; // Get the URI of the first track in the search results
-    return trackURI;
-}
-
-// Function to get track URIs for the list of songs
-async function getTrackURIs(songs, token) {
-    const trackURIs = [];
-    for (const song of songs) {
-        const { name, artist } = song;
-        console.log("name", name);
-        console.log("artist", artist);
-        console.log("song uri", song.uri);
-        const trackURI = await searchTrackURI(title, artist, token);
-
-        if (trackURI) {
-            trackURIs.push(trackURI);
-        }
-    }
-    return trackURIs; // Return the array of track URIs
-}*/
 
 async function createPlaylist(trackURIs, userId, token) {
     //const trackURIs = await getTrackURIs(songs, token);
@@ -228,8 +202,6 @@ async function createPlaylist(trackURIs, userId, token) {
         `v1/playlists/${playlist.id}/tracks?uris=${trackURIs.join(',')}`,
         'POST', undefined, token);
 
-    console.log("name", playlist.name);
-    console.log("id", playlist.id);
     return playlist;
 }
 
@@ -469,8 +441,21 @@ async function populateUI(profile, token, latitude, longitude) {
         document.getElementById("recommendedTracks").innerText = recommendedTracksList.join("\n");
         const playlistTracksList = [...topTracks, ...recommendedTracks].map(track => track.uri);
         console.log("playlistTracks", playlistTracksList)
-        const createdPlaylist = await createPlaylist(playlistTracksList, profile.id, token);
-        console.log(createdPlaylist.name, createdPlaylist.id);
+        const createPlaylistButton = document.getElementById('createPlaylistButton');
+        const playlistCreatedMessage = document.getElementById('playlistCreatedMessage');
+
+        createPlaylistButton.addEventListener('click', async () => {
+            try {
+                const createdPlaylist = await createPlaylist(playlistTracksList, profile.id, token);
+                // Hide the button after it has been clicked
+                createPlaylistButton.style.display = 'none';
+            // Display the playlist created message
+            playlistCreatedMessage.textContent = `A playlist named "${createdPlaylist.name}" has been created.`;
+        } catch (error) {
+            console.error('Error creating playlist:', error);
+        }
+    });
+
       } else {
         document.getElementById("recommendedTracks").innerText = "No recommended tracks found.";
       }
