@@ -159,10 +159,11 @@ async function getTopTracks(token){
     return result.items;
 }
 
+/*
 async function getTrackID(token) {
     const result = await fetchWebApi('v1/me/top/tracks', 'GET', undefined, token);
     return result.items.map((track) => track.id);
-}
+}*/
 
 async function getTopArtists(token){
     // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
@@ -443,7 +444,7 @@ async function populateUI(profile, token, latitude, longitude) {
         document.getElementById("topArtists").innerText = "No top artists found.";
     }
 
-    const topTrackIds = await getTrackID(token);
+    const topTrackIds = topTracks.map(({ id }) => id);
     //console.log("trackID", topTrackIds);
     if (Array.isArray(topTrackIds) && topTrackIds.length > 0) {
       const recommendedTracks = await getRecommendedTracks(token, topTrackIds);
