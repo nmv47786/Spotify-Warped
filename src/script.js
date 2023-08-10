@@ -473,9 +473,7 @@ async function populateUI(profile, token, latitude, longitude) {
         //console.log("Recommended Tracks List:", recommendedTracksList); // Check the recommended tracks list in the console.
   
         document.getElementById("recommendedTracks").innerText = recommendedTracksList.join("\n");
-        const playlistTracksList = [...topTracks, ...recommendedTracks].map(({ name, artists }) =>
-          `${name} by ${artists.map(artist => artist.name).join(', ')}`
-        );
+        const playlistTracksList = [...topTracks, ...recommendedTracks];
         console.log("playlistTracks", playlistTracksList)
         const createdPlaylist = await createPlaylist(playlistTracksList, profile.id, token);
         console.log(createdPlaylist.name, createdPlaylist.id);
