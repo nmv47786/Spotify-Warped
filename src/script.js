@@ -230,7 +230,7 @@ async function getAudioFeatures(token, songs) {
     const acousticness = 0;
     const popularity = 0;
     const loudness = 0;
-    songs.forEach(song => {
+    audioFeatures.forEach(song => {
         danceability += song.danceability;
         energy += song.energy;
         valence += song.valence;
@@ -242,14 +242,14 @@ async function getAudioFeatures(token, songs) {
     });
 
     const averageFeatures = {
-        danceability: danceability / numSongs,
-        energy: energy / numSongs,
-        valence: valence / numSongs,
-        speechiness: speechiness / numSongs,
-        instrumentalness: instrumentalness / numSongs,
-        acousticness: acousticness / numSongs,
-        popularity: popularity / numSongs,
-        loudness: loudness / numSongs
+        danceability: danceability / audioFeatures.length,
+        energy: energy / audioFeatures.length,
+        valence: valence / audioFeatures.length,
+        speechiness: speechiness / audioFeatures.length,
+        instrumentalness: instrumentalness / audioFeatures.length,
+        acousticness: acousticness / audioFeatures.length,
+        popularity: popularity / audioFeatures.length,
+        loudness: loudness / audioFeatures.length
     };
 
     return averageFeatures;
