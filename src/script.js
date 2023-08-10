@@ -189,7 +189,7 @@ async function getArtistID(token) {
 
 // Function to search for a track and retrieve its URI
 async function searchTrackURI(songTitle, artistName, token) {
-    const result = await fetch(`v1/search?type=track&q=${encodeURIComponent(`${songTitle} ${artistName}`)}`, 'GET', undefined, token);
+    const result = await fetchWebApi(`v1/search?type=track&q=${encodeURIComponent(`${songTitle} ${artistName}`)}`, 'GET', undefined, token);
 
     const data = await result.json();
     const trackURI = data.tracks.items[0]?.uri; // Get the URI of the first track in the search results
