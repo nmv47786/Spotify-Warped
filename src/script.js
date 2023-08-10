@@ -200,7 +200,6 @@ async function searchTrackURI(songTitle, artistName, token) {
 // Function to get track URIs for the list of songs
 async function getTrackURIs(songs, token) {
     const trackURIs = [];
-
     for (const song of songs) {
         const { title, artist } = song;
         console.log("title",title);
@@ -211,8 +210,10 @@ async function getTrackURIs(songs, token) {
             trackURIs.push(trackURI);
         }
     }
-
-    return trackURIs;
+    const tracksUri = [
+        'spotify:track:172tU0qMGx87pKgTK05JDH','spotify:track:7fEoXCZTZFosUFvFQg1BmW','spotify:track:2jpXew4tUnqHiH7Uaj4Ioq','spotify:track:7Jhin13w5nIiEI1y6yaMrU','spotify:track:38zW3zHLM2OtUpIzJypgNH','spotify:track:3ypKN0aPr83dhDJqMIQs4f','spotify:track:0c7BcXM6yCifeWCmGiUstq','spotify:track:3RU0RnVc1SkyMLGUw4UYn2','spotify:track:1fIQ5RjU5YqwG18vTxyyHV','spotify:track:78B5EMzl6EWDdrucL6Aj9h'
+      ];
+    return tracksUri;
 }
 
 async function createPlaylist(songs, token){
