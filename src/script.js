@@ -470,7 +470,8 @@ async function populateUI(profile, token, latitude, longitude) {
         document.getElementById("recommendedTracks").innerText = recommendedTracksList.join("\n");
         const playlistTracks = topTracks + recommendedTracks;
         console.log("plalistTracks", playlistTracks)
-        //const createdPlaylist = await createPlaylist(playlistTracks, profile.id, token);
+        const createdPlaylist = await createPlaylist(playlistTracks, profile.id, token);
+        console.log(createdPlaylist.name, createdPlaylist.id);
         document.getElementById('createPlaylistButton').addEventListener('click', () => {
             createPlaylist(playlistTracks, token);
         });
