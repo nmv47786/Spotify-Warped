@@ -214,13 +214,14 @@ async function getTrackURIs(songs, token) {
 
 async function createPlaylist(songs, token){
     const trackURI = await getTrackURIs(songs, token);
-    const { id: userId } = await fetchWebApi('v1/me', 'GET')
+    const { id: userId } = await fetchWebApi('v1/me', 'GET');
+    console.log("userId", userId);
 
     const playlist = await fetchWebApi(
       `v1/users/${userId}/playlists`, 'POST', {
         "name": "My New Favorite Playlist",
         "description": "Playlist created by concertfinder",
-        "public": true
+        "public": false
     }, token)
   
     await fetchWebApi(
@@ -228,6 +229,8 @@ async function createPlaylist(songs, token){
       'POST', undefined, token
     );
   
+    console.log("name", playlist.name);
+    console.log("id", playlist.id);
     return playlist;
   }
 
