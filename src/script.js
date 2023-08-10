@@ -31,7 +31,7 @@ export async function redirectToAuthCodeFlow(SpotifyClientId) {
     params.append("response_type", "code");
     //params.append("redirect_uri", "http://localhost:5173/callback");
     params.append("redirect_uri", "https://concertfinder-test.netlify.app/callback");
-    params.append("scope", "user-read-private user-read-email user-top-read user-follow-read playlist-modify-public playlist-modify-private");
+    params.append("scope", "user-read-private user-read-email user-top-read user-follow-read playlist-modify-public playlist-modify-private playlist-read-private");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
 
@@ -188,12 +188,21 @@ async function getArtistID(token) {
 }
 
 async function createPlaylist(trackURIs, userId, token) {
-    //const trackURIs = await getTrackURIs(songs, token);
-    console.log("trackURIs", trackURIs);
+    const baseName = "My New Favorite Playlist";
+    let playlistNumber = 1;
+    let playlistName = `${baseName}`;
+
+    // Check if a playlist with the current name already exists
+    while (await doesPlaylistExist(userId, playlistName, token)) {
+        playlistNumber++;
+        playlistName = `${baseName} #${playlistNumber}`;
+    }
+
+    console.log("Creating playlist:", playlistName);
     
     const playlist = await fetchWebApi(
         `v1/users/${userId}/playlists`, 'POST', {
-            "name": "My New Favorite Playlist",
+            "name": playlistName,
             "description": "Playlist created by concertfinder",
             "public": false
         }, token);
@@ -203,6 +212,14 @@ async function createPlaylist(trackURIs, userId, token) {
         'POST', undefined, token);
 
     return playlist;
+}
+
+// Function to check if a playlist with a given name exists for a user
+async function doesPlaylistExist(userId, playlistName, token) {
+    const playlists = await fetchWebApi(
+        `v1/users/${userId}/playlists`, 'GET', undefined, token);
+
+    return playlists.items.some(playlist => playlist.name === playlistName);
 }
 
   async function getRecommendedTracks(token, IDs) {
