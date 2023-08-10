@@ -329,9 +329,7 @@ async function checkEventsForFestivalArtists(list, latitude, longitude, maxDista
                 const parsedTime = new Date(`2000-01-01T${eventTime}`);
                 const formattedTime = parsedTime.toString() !== 'Invalid Date'
                     ? parsedTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
-                    : '';
-                console.log(formattedTime, ": formatted time")
-        
+                    : '';        
                 const parsedDate = new Date(eventDate);
                 const formattedDate = parsedDate.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' });
         
