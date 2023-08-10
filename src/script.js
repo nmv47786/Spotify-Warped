@@ -31,7 +31,7 @@ export async function redirectToAuthCodeFlow(SpotifyClientId) {
     params.append("response_type", "code");
     //params.append("redirect_uri", "http://localhost:5173/callback");
     params.append("redirect_uri", "https://concertfinder-test.netlify.app/callback");
-    params.append("scope", "user-read-private user-read-email user-top-read user-follow-read");
+    params.append("scope", "user-read-private user-read-email user-top-read user-follow-read playlist-modify-public playlist-modify-private");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
 
@@ -152,7 +152,6 @@ async function fetchWebApi(endpoint, method, body, token) {
         throw error; // Rethrow the error so it can be caught by the caller.
     }
 }
-
   
 async function getTopTracks(token){
     // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
@@ -188,6 +187,48 @@ async function getArtistID(token) {
     return result.items.map((artist) => artist.id);
 }
 
+// Function to search for a track and retrieve its URI
+async function searchTrackURI(songTitle, artistName, token) {
+    const result = await fetch(`v1/search?type=track&q=${encodeURIComponent(`${songTitle} ${artistName}`)}`, 'GET', undefined, token);
+
+    const data = await result.json();
+    const trackURI = data.tracks.items[0]?.uri; // Get the URI of the first track in the search results
+    return trackURI;
+}
+
+// Function to get track URIs for the list of songs
+async function getTrackURIs(songs, token) {
+    const trackURIs = [];
+
+    for (const song of songs) {
+        const { title, artist } = song;
+        const trackURI = await searchTrackURI(title, artist, token);
+
+        if (trackURI) {
+            trackURIs.push(trackURI);
+        }
+    }
+
+    return trackURIs;
+}
+
+async function createPlaylist(songs, userId, token){
+    const trackURI = await getTrackURIs(songs, token);
+
+    const playlist = await fetchWebApi(
+      `v1/users/${userId}/playlists`, 'POST', {
+        "name": "My New Favorite Playlist",
+        "description": "Playlist created by concertfinder",
+        "public": true
+    }, token)
+  
+    await fetchWebApi(
+      `v1/playlists/${playlist.id}/tracks?uris=${trackURI.join(',')}`,
+      'POST', undefined, token
+    );
+  
+    return playlist;
+  }
 
   async function getRecommendedTracks(token, IDs) {
     const recommendedTracks = [];
@@ -423,6 +464,11 @@ async function populateUI(profile, token, latitude, longitude) {
         //console.log("Recommended Tracks List:", recommendedTracksList); // Check the recommended tracks list in the console.
   
         document.getElementById("recommendedTracks").innerText = recommendedTracksList.join("\n");
+        const playlistTracks = topTracks + recommendedTracks;
+        //const createdPlaylist = await createPlaylist(playlistTracks, profile.id, token);
+        document.getElementById('createPlaylistButton').addEventListener('click', () => {
+            createPlaylist(playlistTracks, profile.id, token);
+        });
       } else {
         document.getElementById("recommendedTracks").innerText = "No recommended tracks found.";
       }
