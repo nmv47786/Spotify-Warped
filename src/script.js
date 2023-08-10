@@ -472,9 +472,6 @@ async function populateUI(profile, token, latitude, longitude) {
         console.log("plalistTracks", playlistTracks)
         const createdPlaylist = await createPlaylist(playlistTracks, profile.id, token);
         console.log(createdPlaylist.name, createdPlaylist.id);
-        document.getElementById('createPlaylistButton').addEventListener('click', () => {
-            createPlaylist(playlistTracks, token);
-        });
       } else {
         document.getElementById("recommendedTracks").innerText = "No recommended tracks found.";
       }
