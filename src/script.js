@@ -228,7 +228,7 @@ async function getAudioFeatures(token, songs) {
     let speechiness = 0;
     let instrumentalness = 0;
     let acousticness = 0;
-    let popularity = 0;
+    let liveness = 0;
     let loudness = 0;
     audioFeatures.forEach(song => {
         danceability += song.danceability;
@@ -237,7 +237,7 @@ async function getAudioFeatures(token, songs) {
         speechiness += song.speechiness;
         instrumentalness += song.instrumentalness;
         acousticness += song.acousticness;
-        popularity += song.popularity;
+        liveness += song.liveness;
         loudness += song.loudness;
     });
 
@@ -248,7 +248,7 @@ async function getAudioFeatures(token, songs) {
         speechiness: speechiness / audioFeatures.length,
         instrumentalness: instrumentalness / audioFeatures.length,
         acousticness: acousticness / audioFeatures.length,
-        popularity: popularity / audioFeatures.length,
+        liveness: liveness / audioFeatures.length,
         loudness: loudness / audioFeatures.length
     };
 
@@ -468,7 +468,7 @@ async function populateUI(profile, token, latitude, longitude) {
         console.log("speechiness", features.speechiness);
         console.log("instrumentalness", features.instrumentalness);
         console.log("acousticness", features.acousticness);
-        console.log("popularity", features.popularity);
+        console.log("liveness", features.liveness);
         console.log("loudness", features.loudness);
     } else {
         document.getElementById("topTracks").innerText = "No top tracks found.";
@@ -523,7 +523,7 @@ async function populateUI(profile, token, latitude, longitude) {
                 console.log("speechiness", features.speechiness);
                 console.log("instrumentalness", features.instrumentalness);
                 console.log("acousticness", features.acousticness);
-                console.log("popularity", features.popularity);
+                console.log("liveness", features.liveness);
                 console.log("loudness", features.loudness);
                 // Hide the button after it has been clicked
                 createPlaylistButton.style.display = 'none';
