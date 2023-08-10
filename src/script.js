@@ -220,7 +220,8 @@ async function doesPlaylistExist(userId, playlistName, token) {
 async function getAudioFeatures(token, songs) {
     const result = await fetchWebApi(`v1/audio-features?ids=${songs.join(',')}`, 'GET', undefined, token);
     const audioFeatures = result.audio_features;
-
+    
+    console.log(audioFeatures);
     const danceability = 0;
     const energy = 0;
     const valence = 0;
@@ -229,7 +230,7 @@ async function getAudioFeatures(token, songs) {
     const acousticness = 0;
     const popularity = 0;
     const loudness = 0;
-    audioFeatures.forEach(song => {
+    songs.forEach(song => {
         danceability += song.danceability;
         energy += song.energy;
         valence += song.valence;
