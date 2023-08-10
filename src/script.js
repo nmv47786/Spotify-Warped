@@ -189,8 +189,9 @@ async function getArtistID(token) {
 
 // Function to search for a track and retrieve its URI
 async function searchTrackURI(songTitle, artistName, token) {
+    console.log("song: ", songTitle);
     const result = await fetchWebApi(`v1/search?type=track&q=${encodeURIComponent(`${songTitle} ${artistName}`)}`, 'GET', undefined, token);
-
+    console.log("result",result);
     const data = await result.json();
     const trackURI = data.tracks.items[0]?.uri; // Get the URI of the first track in the search results
     return trackURI;
@@ -214,6 +215,7 @@ async function getTrackURIs(songs, token) {
 
 async function createPlaylist(songs, token){
     const trackURI = await getTrackURIs(songs, token);
+    console.log("trackURI",trackURI);
     const { id: userId } = await fetchWebApi('v1/me', 'GET');
     console.log("userId", userId);
 
@@ -469,7 +471,7 @@ async function populateUI(profile, token, latitude, longitude) {
   
         document.getElementById("recommendedTracks").innerText = recommendedTracksList.join("\n");
         const playlistTracks = topTracks + recommendedTracks;
-        console.log("plalistTracks", playlistTracks)
+        console.log("playlistTracks", playlistTracks)
         const createdPlaylist = await createPlaylist(playlistTracks, profile.id, token);
         console.log(createdPlaylist.name, createdPlaylist.id);
       } else {
