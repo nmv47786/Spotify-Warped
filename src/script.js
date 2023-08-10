@@ -213,8 +213,8 @@ async function getTrackURIs(songs, token) {
     return trackURIs; // Return the array of track URIs
 }
 
-async function createPlaylist(songs, userId, token) {
-    const trackURIs = await getTrackURIs(songs, token);
+async function createPlaylist(trackURIs, userId, token) {
+    //const trackURIs = await getTrackURIs(songs, token);
     console.log("trackURIs", trackURIs);
     
     const playlist = await fetchWebApi(
@@ -467,7 +467,7 @@ async function populateUI(profile, token, latitude, longitude) {
         //console.log("Recommended Tracks List:", recommendedTracksList); // Check the recommended tracks list in the console.
   
         document.getElementById("recommendedTracks").innerText = recommendedTracksList.join("\n");
-        const playlistTracksList = [...topTracks, ...recommendedTracks];
+        const playlistTracksList = [...topTracks, ...recommendedTracks].map(track => track.uri);
         console.log("playlistTracks", playlistTracksList)
         const createdPlaylist = await createPlaylist(playlistTracksList, profile.id, token);
         console.log(createdPlaylist.name, createdPlaylist.id);
