@@ -28,7 +28,7 @@ export async function redirectToAuthCodeFlow(SpotifyClientId) {
 
     const params = new URLSearchParams();
     params.append("client_id", SpotifyClientId);
-    params.append("response_type", "code");
+    params.append("response_type", "code"); 
     //params.append("redirect_uri", "http://localhost:5173/callback");
     params.append("redirect_uri", "https://concertfinder.netlify.app/callback");
     params.append("scope", "user-read-private user-read-email user-top-read user-follow-read playlist-modify-public playlist-modify-private playlist-read-private");
