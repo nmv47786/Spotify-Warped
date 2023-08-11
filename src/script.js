@@ -343,7 +343,8 @@ function populateFlyer(lineup) {
 
 // Function to search for events for a specific artist
 async function searchEventsForArtist(artistName, latitude, longitude, maxDistance) {
-    const endpoint = `https://app.ticketmaster.com/discovery/v2/events.json?keyword=${encodeURIComponent(artistName)}&size=5&latlong=${latitude},${longitude}&radius=${maxDistance}&apikey=${TMClientId}`;
+    const corsProxyUrl = 'https://cors-anywhere.herokuapp.com/';
+    const endpoint = `${corsProxyUrl}https://app.ticketmaster.com/discovery/v2/events.json?keyword=${encodeURIComponent(artistName)}&size=5&latlong=${latitude},${longitude}&radius=${maxDistance}&apikey=${TMClientId}`;
 
     try {
         const response = await fetch(endpoint);
