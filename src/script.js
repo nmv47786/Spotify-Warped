@@ -264,19 +264,14 @@ async function getTopGenres(token) {
     const allTracks = [...tracks, ...tracks2];
     const allGenres = {};
 
-    for (const track of allTracks) {
-        // Get album information for the track
-        const albumId = track.album.id;
-        console.log("albumId",albumId);
-        const albumResult = await fetchWebApi(`v1/albums/${albumId}`, 'GET', undefined, token);
-        console.log("albumResult", albumResult);
-        const genres = albumResult.genres;
-        console.log("genres", genres);
-
-        genres.forEach(genre => {
-            allGenres[genre] = (allGenres[genre] || 0) + 1;
+    allTracks.forEach(track => {
+        track.artists.forEach(artist => {
+            artist.genres.forEach(genre => {
+                // Increment genre count or initialize to 1 if not found
+                allGenres[genre] = (allGenres[genre] || 0) + 1;
+            });
         });
-    }
+    });
 
     const genreCounts = Object.entries(allGenres).map(([genre, count]) => ({ genre, count }));
     genreCounts.sort((a, b) => b.count - a.count);
