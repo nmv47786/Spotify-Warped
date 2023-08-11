@@ -267,9 +267,10 @@ async function getTopGenres(token) {
     for (const track of allTracks) {
         // Get album information for the track
         const albumId = track.album.id;
+        console.log("albumId",albumId);
         const albumResult = await fetchWebApi(`v1/albums/${albumId}`, 'GET', undefined, token);
+        console.log("albumResult", albumId);
         const genres = albumResult.genres;
-        console.log("genres: ", genres);
 
         genres.forEach(genre => {
             allGenres[genre] = (allGenres[genre] || 0) + 1;
@@ -278,8 +279,6 @@ async function getTopGenres(token) {
 
     const genreCounts = Object.entries(allGenres).map(([genre, count]) => ({ genre, count }));
     genreCounts.sort((a, b) => b.count - a.count);
-    console.log("genreCounts: ", genreCounts);
-    console.log("topGenres", topGenres);
     const topGenres = genreCounts.slice(0, 10);
 
     return topGenres;
