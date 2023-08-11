@@ -265,18 +265,23 @@ async function getTopGenres(token) {
     const allGenres = {};
 
     allTracks.forEach(track => {
-        track.artists.forEach(artist => {
-            artist.genres.forEach(genre => {
-                // Increment genre count or initialize to 1 if not found
-                allGenres[genre] = (allGenres[genre] || 0) + 1;
+        if (track.artists) { // Check if artists property exists
+            track.artists.forEach(artist => {
+                if (artist.genres) { // Check if genres property exists
+                    artist.genres.forEach(genre => {
+                        console.log("genre", genre);
+                        // Increment genre count or initialize to 1 if not found
+                        allGenres[genre] = (allGenres[genre] || 0) + 1;
+                    });
+                }
             });
-        });
+        }
     });
 
     const genreCounts = Object.entries(allGenres).map(([genre, count]) => ({ genre, count }));
     genreCounts.sort((a, b) => b.count - a.count);
     const topGenres = genreCounts.slice(0, 10);
-
+    console.log("genreCounts",genreCounts);
     return topGenres;
 }
 
