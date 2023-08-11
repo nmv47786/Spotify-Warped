@@ -272,11 +272,16 @@ async function getTopGenres(token) {
 
     const allGenres = {};
 
-    tracks.forEach(track => {
-        track.track.genres.forEach(genre => { // Accessing the genres for the track
+    for (const track of tracks) {
+        // Get album information for the track
+        const albumId = track.album.id;
+        const albumResult = await fetchWebApi(`v1/albums/${albumId}`, 'GET', undefined, token);
+        const genres = albumResult.genres;
+
+        genres.forEach(genre => {
             allGenres[genre] = (allGenres[genre] || 0) + 1;
         });
-    });
+    }
 
     const genreCounts = Object.entries(allGenres).map(([genre, count]) => ({ genre, count }));
     genreCounts.sort((a, b) => b.count - a.count);
@@ -285,6 +290,7 @@ async function getTopGenres(token) {
 
     return topGenres;
 }
+
 
 
   async function getRecommendedTracks(token, IDs) {
