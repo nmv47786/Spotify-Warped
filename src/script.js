@@ -261,19 +261,14 @@ async function getTopGenres(token) {
     let offset = 0;
 
     // Fetch the first batch of top tracks
-    const result = await fetchWebApi(`v1/me/top/tracks?offset=${offset}&limit=${limit}`, 'GET', undefined, token);
+    const result = await fetchWebApi('v1/me/top/tracks?offset=0&limit=50', 'GET', undefined, token);
+    const result2 = await fetchWebApi('v1/me/top/tracks?offset=50&limit=50', 'GET', undefined, token);
     const tracks = result.items;
-
-    // Fetch the second batch of top tracks only if needed
-    if (tracks.length === limit) {
-        offset += limit;
-        const result2 = await fetchWebApi(`v1/me/top/tracks?offset=${offset}&limit=${limit}`, 'GET', undefined, token);
-        tracks.push(...result2.items);
-    }
-
+    const tracks2 = result2.items;
+    const allTracks = [...tracks, ...tracks2];
     const allGenres = {};
 
-    for (const track of tracks) {
+    for (const track of allTracks) {
         // Get album information for the track
         const albumId = track.album.id;
         const albumResult = await fetchWebApi(`v1/albums/${albumId}`, 'GET', undefined, token);
