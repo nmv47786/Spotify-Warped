@@ -257,10 +257,6 @@ async function getAudioFeatures(token, songs) {
 
 // Top genres
 async function getTopGenres(token) {
-    const limit = 50;
-    let offset = 0;
-
-    // Fetch the first batch of top tracks
     const result = await fetchWebApi('v1/me/top/tracks?offset=0&limit=50', 'GET', undefined, token);
     const result2 = await fetchWebApi('v1/me/top/tracks?offset=50&limit=50', 'GET', undefined, token);
     const tracks = result.items;
@@ -273,6 +269,7 @@ async function getTopGenres(token) {
         const albumId = track.album.id;
         const albumResult = await fetchWebApi(`v1/albums/${albumId}`, 'GET', undefined, token);
         const genres = albumResult.genres;
+        console.log("genres: ", genres);
 
         genres.forEach(genre => {
             allGenres[genre] = (allGenres[genre] || 0) + 1;
@@ -281,7 +278,8 @@ async function getTopGenres(token) {
 
     const genreCounts = Object.entries(allGenres).map(([genre, count]) => ({ genre, count }));
     genreCounts.sort((a, b) => b.count - a.count);
-
+    console.log("genreCounts: ", genreCounts);
+    console.log("topGenres", topGenres);
     const topGenres = genreCounts.slice(0, 10);
 
     return topGenres;
