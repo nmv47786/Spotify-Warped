@@ -263,15 +263,20 @@ async function getTopGenres(token) {
     const genreCountMap = new Map(); // Map to store genre counts
 
     tracks.forEach(track => {
-        console.log("track",track);
-        track.artists.forEach(artist => {
-            console.log("artist",artist);
-            artist.genres.forEach(genre => {
-                // Increment genre count or initialize to 1 if not found
-                console.log("genre",genre);
-                genreCountMap.set(genre, (genreCountMap.get(genre) || 0) + 1);
+        console.log("track", track);
+        
+        if (track.artists && Array.isArray(track.artists)) {
+            track.artists.forEach(artist => {
+                console.log("artist", artist);
+
+                if (artist.genres && Array.isArray(artist.genres)) {
+                    artist.genres.forEach(genre => {
+                        console.log("genre", genre);
+                        genreCountMap.set(genre, (genreCountMap.get(genre) || 0) + 1);
+                    });
+                }
             });
-        });
+        }
     });
 
     // Convert the Map to an array of objects
@@ -285,6 +290,7 @@ async function getTopGenres(token) {
 
     return topGenres;
 }
+
 
 
 
