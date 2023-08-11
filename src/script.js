@@ -258,10 +258,10 @@ async function getAudioFeatures(token, songs) {
 // Top genres
 async function getTopGenres(token) {
     const result = await fetchWebApi('v1/me/top/tracks?offset=0&limit=50', 'GET', undefined, token);
-    const tracks = result.items;
-
+    const trackIds = result.items.id;
+    const result2 = await fetchWebApi(`v1/tracks?${trackIds.map(({id}) => id).join(',')}`, 'GET', undefined, token);
+    const tracks = result2.items;
     const genreCountMap = new Map(); // Map to store genre counts
-
     tracks.forEach(track => {
         console.log("track", track);
         
