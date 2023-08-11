@@ -255,6 +255,33 @@ async function getAudioFeatures(token, songs) {
     return averageFeatures;
 }
 
+async function getTopGenres(token) {
+    const result = await fetchWebApi('v1/me/top/tracks?offset=0&limit=50', 'GET', undefined, token);
+    const result2 = await fetchWebApi('v1/me/top/tracks?offset=50&limit=50', 'GET', undefined, token);
+    const tracks = result.items;
+    const tracks2 = result2.items;
+    const allTracks = [...tracks, ...tracks2];
+    const allGenres = new Set();
+
+    allTracks.forEach(track => {
+        track.genres.forEach(genre => {
+            // Increment genre count or initialize to 1 if not found
+            allGenres.set(genre, (allGenres.get(genre) || 0) + 1);
+        });
+    });
+
+    // Convert the Map to an array of objects
+    const genreCounts = Array.from(allGenres, ([genre, count]) => ({ genre, count }));
+
+    // Sort the genre counts in descending order
+    genreCounts.sort((a, b) => b.count - a.count);
+
+    // Get the top 10 genres
+    const topGenres = genreCounts.slice(0, 10);
+
+    return topGenres;
+}
+
   async function getRecommendedTracks(token, IDs) {
     const recommendedTracks = [];
 
@@ -472,6 +499,15 @@ async function populateUI(profile, token, latitude, longitude) {
         console.log("loudness", features.loudness);
     } else {
         document.getElementById("topTracks").innerText = "No top tracks found.";
+    }
+
+    
+    const genres = getTopGenres(token);
+    if (Array.isArray(genres)) {
+        const genreList = genres.map(({ genre, count}) =>
+        `${genre}: ${count}`
+        );
+        console.log(genreList);
     }
 
     //top artists
