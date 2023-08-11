@@ -269,7 +269,7 @@ async function getTopGenres(token) {
         const albumId = track.album.id;
         console.log("albumId",albumId);
         const albumResult = await fetchWebApi(`v1/albums/${albumId}`, 'GET', undefined, token);
-        console.log("albumResult", albumId);
+        console.log("albumResult", albumResult);
         const genres = albumResult.genres;
 
         genres.forEach(genre => {
