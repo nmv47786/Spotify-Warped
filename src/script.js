@@ -255,6 +255,7 @@ async function getAudioFeatures(token, songs) {
     return averageFeatures;
 }
 
+// Top genres
 async function getTopGenres(token) {
     const limit = 50;
     let offset = 0;
@@ -512,15 +513,15 @@ async function populateUI(profile, token, latitude, longitude) {
         document.getElementById("topTracks").innerText = "No top tracks found.";
     }
 
-    
-    const genres = getTopGenres(token);
+    // Top Genres
+    const genres = await getTopGenres(token);
     if (Array.isArray(genres)) {
         const genreList = genres.map(({ genre, count}) =>
         `${genre}: ${count}`
         );
-        console.log(genreList);
+        console.log("GenreList: ",genreList);
     }
-    console.log (genres);
+    console.log ("Genres: ",genres);
 
     //top artists
     const topArtists = await getTopArtists(token);
