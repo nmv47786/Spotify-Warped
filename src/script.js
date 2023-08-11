@@ -520,6 +520,7 @@ async function populateUI(profile, token, latitude, longitude) {
         );
         console.log(genreList);
     }
+    console.log (genres);
 
     //top artists
     const topArtists = await getTopArtists(token);
