@@ -259,31 +259,33 @@ async function getAudioFeatures(token, songs) {
 async function getTopGenres(token) {
     const result = await fetchWebApi('v1/me/top/tracks?offset=0&limit=50', 'GET', undefined, token);
     const tracks = result.items;
-    const allGenres = {};
 
-    console.log("allTracks:", tracks);
+    const genreCountMap = new Map(); // Map to store genre counts
 
     tracks.forEach(track => {
-        if (track.artists && Array.isArray(track.artists)) {
-            track.artists.forEach(artist => {
-                if (artist.genres && Array.isArray(artist.genres)) {
-                    artist.genres.forEach(genre => {
-                        console.log("genre",genre);
-                        allGenres[genre] = (allGenres[genre] || 0) + 1;
-                    });
-                }
+        console.log("track",track);
+        track.artists.forEach(artist => {
+            console.log("artist",artist);
+            artist.genres.forEach(genre => {
+                // Increment genre count or initialize to 1 if not found
+                console.log("genre",genre);
+                genreCountMap.set(genre, (genreCountMap.get(genre) || 0) + 1);
             });
-        }
+        });
     });
 
-    console.log("allGenres:", allGenres);
+    // Convert the Map to an array of objects
+    const genreCounts = Array.from(genreCountMap, ([genre, count]) => ({ genre, count }));
 
-    const genreCounts = Object.entries(allGenres).map(([genre, count]) => ({ genre, count }));
+    // Sort the genre counts in descending order
     genreCounts.sort((a, b) => b.count - a.count);
+
+    // Get the top 10 genres
     const topGenres = genreCounts.slice(0, 10);
 
     return topGenres;
 }
+
 
 
 
