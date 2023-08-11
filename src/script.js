@@ -258,37 +258,28 @@ async function getAudioFeatures(token, songs) {
 // Top genres
 async function getTopGenres(token) {
     const result = await fetchWebApi('v1/me/top/tracks?offset=0&limit=50', 'GET', undefined, token);
-    const trackIds = result.items.id;
-    const result2 = await fetchWebApi(`v1/tracks?${trackIds.map(({id}) => id).join(',')}`, 'GET', undefined, token);
-    const tracks = result2.items;
-    const genreCountMap = new Map(); // Map to store genre counts
-    tracks.forEach(track => {
-        console.log("track", track);
-        
-        if (track.artists && Array.isArray(track.artists)) {
-            track.artists.forEach(artist => {
-                console.log("artist", artist);
+    const tracks = result.items;
+    const genreCounts = {};
 
-                if (artist.genres && Array.isArray(artist.genres)) {
-                    artist.genres.forEach(genre => {
-                        console.log("genre", genre);
-                        genreCountMap.set(genre, (genreCountMap.get(genre) || 0) + 1);
-                    });
-                }
+        // Count genres from top artists
+        result.items.forEach(artist => {
+            console.log("artist",artist);
+            artist.genres.forEach(genre => {
+                console.log("genre",genre);
+                genreCounts[genre] = (genreCounts[genre] || 0) + 1;
             });
-        }
-    });
+        });
 
-    // Convert the Map to an array of objects
-    const genreCounts = Array.from(genreCountMap, ([genre, count]) => ({ genre, count }));
+        // Sort genres by count in descending order
+        const sortedGenres = Object.keys(genreCounts).sort((a, b) => genreCounts[b] - genreCounts[a]);
 
-    // Sort the genre counts in descending order
-    genreCounts.sort((a, b) => b.count - a.count);
+        // Get the top 10 genres with counts
+        const topGenres = sortedGenres.slice(0, 10).map(genre => ({
+            genre,
+            count: genreCounts[genre]
+        }));
 
-    // Get the top 10 genres
-    const topGenres = genreCounts.slice(0, 10);
-
-    return topGenres;
+        return topGenres;
 }
 
 
