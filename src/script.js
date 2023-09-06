@@ -534,7 +534,7 @@ async function populateUI(profile, token, latitude, longitude) {
                 document.getElementById("loudness").textContent = "loudness: " + features.loudness;
 
                 // Show the <p> elements
-                const featureParagraphs = document.querySelectorAll('p[class^="feature"]');
+                const featureParagraphs = document.querySelectorAll('p.feature');
                 featureParagraphs.forEach(p => {
                     p.style.display = 'block';
                 });
