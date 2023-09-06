@@ -522,26 +522,21 @@ async function populateUI(profile, token, latitude, longitude) {
         createPlaylistButton.addEventListener('click', async () => {
             try {
                 const createdPlaylist = await createPlaylist(playlistTracksList, profile.id, token);
-/*
-                const features = await getAudioFeatures(token, playlistTracksList.map(({ id }) => id));
-                document.getElementById("danceability").textContent = "danceability: " + features.danceability;
-                document.getElementById("energy").textContent = "energy: " + features.energy;
-                document.getElementById("valence").textContent = "valence: " + features.valence;
-                document.getElementById("speechiness").textContent = "speechiness: " + features.speechiness;
-                document.getElementById("instrumentalness").textContent = "instrumentalness: " + features.instrumentalness;
-                document.getElementById("acousticness").textContent = "acousticness: " + features.acousticness;
-                document.getElementById("liveness").textContent = "liveness: " + features.liveness;
-                document.getElementById("loudness").textContent = "loudness: " + features.loudness;
 
-                // Show the <p> elements
-                const featureParagraphs = document.querySelectorAll('p.feature');
-                featureParagraphs.forEach(p => {
-                    p.style.display = 'block';
-                }); */
+                const features = await getAudioFeatures(token, playlistTracksList.map(({ id }) => id));
+                console.log("danceability", features.danceability);
+                console.log("energy", features.energy);
+                console.log("valence", features.valence);
+                console.log("speechiness", features.speechiness);
+                console.log("instrumentalness", features.instrumentalness);
+                console.log("acousticness", features.acousticness);
+                console.log("liveness", features.liveness);
+                console.log("loudness", features.loudness);
+                
                 // Hide the button after it has been clicked
                 createPlaylistButton.style.display = 'none';
                 // Display the playlist created message
-                playlistCreatedMessage.textContent = `A playlist named "${createdPlaylist.name}" has been created.`;
+                playlistCreatedMessage.textContent = `A playlist named "${createdPlaylist.name}"`;
         } catch (error) {
             console.error('Error creating playlist:', error);
         }
