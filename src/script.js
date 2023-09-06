@@ -522,7 +522,7 @@ async function populateUI(profile, token, latitude, longitude) {
         createPlaylistButton.addEventListener('click', async () => {
             try {
                 const createdPlaylist = await createPlaylist(playlistTracksList, profile.id, token);
-
+/*
                 const features = await getAudioFeatures(token, playlistTracksList.map(({ id }) => id));
                 document.getElementById("danceability").textContent = "danceability: " + features.danceability;
                 document.getElementById("energy").textContent = "energy: " + features.energy;
@@ -537,7 +537,7 @@ async function populateUI(profile, token, latitude, longitude) {
                 const featureParagraphs = document.querySelectorAll('p.feature');
                 featureParagraphs.forEach(p => {
                     p.style.display = 'block';
-                });
+                }); */
                 // Hide the button after it has been clicked
                 createPlaylistButton.style.display = 'none';
                 // Display the playlist created message
