@@ -241,19 +241,21 @@ async function getAudioFeatures(token, songs) {
         loudness += song.loudness;
     });
 
+    const totalSongs = audioFeatures.length;
     const averageFeatures = {
-        danceability: danceability / audioFeatures.length,
-        energy: energy / audioFeatures.length,
-        valence: valence / audioFeatures.length,
-        speechiness: speechiness / audioFeatures.length,
-        instrumentalness: instrumentalness / audioFeatures.length,
-        acousticness: acousticness / audioFeatures.length,
-        liveness: liveness / audioFeatures.length,
-        loudness: loudness / audioFeatures.length
+        danceability: (danceability / totalSongs * 100).toFixed(2) + '%',
+        energy: (energy / totalSongs * 100).toFixed(2) + '%',
+        valence: (valence / totalSongs * 100).toFixed(2) + '%',
+        speechiness: (speechiness / totalSongs * 100).toFixed(2) + '%',
+        instrumentalness: (instrumentalness / totalSongs * 100).toFixed(2) + '%',
+        acousticness: (acousticness / totalSongs * 100).toFixed(2) + '%',
+        liveness: (liveness / totalSongs * 100).toFixed(2) + '%',
+        loudness: (loudness / totalSongs).toFixed(2) + ' dB'
     };
 
     return averageFeatures;
 }
+
 
   async function getRecommendedTracks(token, IDs) {
     const recommendedTracks = [];
