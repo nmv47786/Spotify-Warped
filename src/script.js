@@ -462,14 +462,18 @@ async function populateUI(profile, token, latitude, longitude) {
         );
         document.getElementById("topTracks").innerText = topTracksList.join("\n");
         const features = await getAudioFeatures(token, topTracks.map(({ id }) => id));
-        console.log("danceability", features.danceability);
-        console.log("energy", features.energy);
-        console.log("valence", features.valence);
-        console.log("speechiness", features.speechiness);
-        console.log("instrumentalness", features.instrumentalness);
-        console.log("acousticness", features.acousticness);
-        console.log("liveness", features.liveness);
-        console.log("loudness", features.loudness);
+        document.getElementById("danceability").textContent = "danceability: " + features.danceability;
+        document.getElementById("energy").textContent = "energy: " + features.energy;
+        document.getElementById("valence").textContent = "valence: " + features.valence;
+        document.getElementById("speechiness").textContent = "speechiness: " + features.speechiness;
+        document.getElementById("instrumentalness").textContent = "instrumentalness: " + features.instrumentalness;
+        document.getElementById("acousticness").textContent = "acousticness: " + features.acousticness;
+        document.getElementById("liveness").textContent = "liveness: " + features.liveness;
+        document.getElementById("loudness").textContent = "loudness: " + features.loudness;
+        const featureParagraphs = document.querySelectorAll('p.feature');
+        featureParagraphs.forEach(p => {
+        p.style.display = 'block';
+    });
     } else {
         document.getElementById("topTracks").innerText = "No top tracks found.";
     }
