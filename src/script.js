@@ -508,7 +508,7 @@ async function populateUI(profile, token, latitude, longitude) {
         const recommendedTrackURIs = recommendedTracks.map(track => track.uri);
         // Combine selectedTopTracks and recommendedTrackURIs, then remove duplicates
         const playlistTracksList = [...new Set([...selectedTopTracks, ...recommendedTrackURIs])];
-
+        console.log(playlistTracksList);
         // Shuffle the playlistTracksList using Fisher-Yates shuffle algorithm
         for (let i = playlistTracksList.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
