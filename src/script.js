@@ -259,6 +259,11 @@ async function getAudioFeatures(token, songs) {
     const recommendedTracks = [];
 
     // Divide IDs array into chunks of 5 tracks
+    // Shuffle the top tracks using Fisher-Yates shuffle algorithm for more randomness
+    for (let i = IDs.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [IDs[i], IDs[j]] = [IDs[j], IDs[i]];
+    }
     const chunkSize = 5;
     for (let i = 0; i < IDs.length; i += chunkSize) {
         const chunk = IDs.slice(i, i + chunkSize);
@@ -500,7 +505,9 @@ async function populateUI(profile, token, latitude, longitude) {
         document.getElementById("recommendedTracks").innerText = recommendedTracksList.join("\n");
         //const playlistTracksList = [...topTracks, ...recommendedTracks].map(track => track.uri);
         const selectedTopTracks = topTracks.sort(() => Math.random() - 0.5).slice(0, 7);
-        const playlistTracksList = [...selectedTopTracks, ...recommendedTracks].map(track => track.uri);
+        const recommendedTrackURIs = recommendedTracks.map(track => track.uri);
+        // Combine selectedTopTracks and recommendedTrackURIs, then remove duplicates
+        const playlistTracksList = [...new Set([...selectedTopTracks, ...recommendedTrackURIs])];
 
         // Shuffle the playlistTracksList using Fisher-Yates shuffle algorithm
         for (let i = playlistTracksList.length - 1; i > 0; i--) {
@@ -517,14 +524,21 @@ async function populateUI(profile, token, latitude, longitude) {
                 const createdPlaylist = await createPlaylist(playlistTracksList, profile.id, token);
 
                 const features = await getAudioFeatures(token, playlistTracksList.map(({ id }) => id));
-                console.log("danceability", features.danceability);
-                console.log("energy", features.energy);
-                console.log("valence", features.valence);
-                console.log("speechiness", features.speechiness);
-                console.log("instrumentalness", features.instrumentalness);
-                console.log("acousticness", features.acousticness);
-                console.log("liveness", features.liveness);
-                console.log("loudness", features.loudness);
+                document.getElementById("danceability").textContent = "danceability: " + features.danceability;
+                document.getElementById("energy").textContent = "energy: " + features.energy;
+                document.getElementById("valence").textContent = "valence: " + features.valence;
+                document.getElementById("speechiness").textContent = "speechiness: " + features.speechiness;
+                document.getElementById("instrumentalness").textContent = "instrumentalness: " + features.instrumentalness;
+                document.getElementById("acousticness").textContent = "acousticness: " + features.acousticness;
+                document.getElementById("liveness").textContent = "liveness: " + features.liveness;
+                document.getElementById("loudness").textContent = "loudness: " + features.loudness;
+
+                // Show the <p> elements
+                const featureParagraphs = document.querySelectorAll('p[id^="feature"]');
+                featureParagraphs.forEach(p => {
+                    p.style.display = 'block';
+                });
+                
                 // Hide the button after it has been clicked
                 createPlaylistButton.style.display = 'none';
                 // Display the playlist created message
