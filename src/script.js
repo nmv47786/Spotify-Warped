@@ -259,11 +259,6 @@ async function getAudioFeatures(token, songs) {
     const recommendedTracks = [];
 
     // Divide IDs array into chunks of 5 tracks
-    // Shuffle the top tracks using Fisher-Yates shuffle algorithm for more randomness
-    for (let i = IDs.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [IDs[i], IDs[j]] = [IDs[j], IDs[i]];
-    }
     const chunkSize = 5;
     for (let i = 0; i < IDs.length; i += chunkSize) {
         const chunk = IDs.slice(i, i + chunkSize);
@@ -505,10 +500,8 @@ async function populateUI(profile, token, latitude, longitude) {
         document.getElementById("recommendedTracks").innerText = recommendedTracksList.join("\n");
         //const playlistTracksList = [...topTracks, ...recommendedTracks].map(track => track.uri);
         const selectedTopTracks = topTracks.sort(() => Math.random() - 0.5).slice(0, 7);
-        const recommendedTrackURIs = recommendedTracks.map(track => track.uri);
-        // Combine selectedTopTracks and recommendedTrackURIs, then remove duplicates
-        const playlistTracksList = [...new Set([...selectedTopTracks, ...recommendedTrackURIs])];
-        console.log(playlistTracksList);
+        const playlistTracksList = [...selectedTopTracks, ...recommendedTracks].map(track => track.uri);
+
         // Shuffle the playlistTracksList using Fisher-Yates shuffle algorithm
         for (let i = playlistTracksList.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -532,11 +525,10 @@ async function populateUI(profile, token, latitude, longitude) {
                 console.log("acousticness", features.acousticness);
                 console.log("liveness", features.liveness);
                 console.log("loudness", features.loudness);
-                
                 // Hide the button after it has been clicked
                 createPlaylistButton.style.display = 'none';
                 // Display the playlist created message
-                playlistCreatedMessage.textContent = `A playlist named "${createdPlaylist.name}"`;
+                playlistCreatedMessage.textContent = `A playlist named "${createdPlaylist.name}" has been created.`;
         } catch (error) {
             console.error('Error creating playlist:', error);
         }
