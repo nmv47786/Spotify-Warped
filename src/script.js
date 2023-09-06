@@ -470,10 +470,6 @@ async function populateUI(profile, token, latitude, longitude) {
         document.getElementById("acousticness").textContent = "acousticness: " + features.acousticness;
         document.getElementById("liveness").textContent = "liveness: " + features.liveness;
         document.getElementById("loudness").textContent = "loudness: " + features.loudness;
-        const featureParagraphs = document.querySelectorAll('p.feature');
-        featureParagraphs.forEach(p => {
-        p.style.display = 'block';
-    });
     } else {
         document.getElementById("topTracks").innerText = "No top tracks found.";
     }
