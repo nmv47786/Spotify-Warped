@@ -260,6 +260,11 @@ async function getAudioFeatures(token, songs) {
   async function getRecommendedTracks(token, IDs) {
     const recommendedTracks = [];
 
+    // Shuffle the IDs using Fisher-Yates shuffle algorithm
+    for (let i = IDs.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [IDs[i], IDs[j]] = [IDs[j], IDs[i]];
+    }
     // Divide IDs array into chunks of 5 tracks
     const chunkSize = 5;
     for (let i = 0; i < IDs.length; i += chunkSize) {
@@ -464,14 +469,14 @@ async function populateUI(profile, token, latitude, longitude) {
         );
         document.getElementById("topTracks").innerText = topTracksList.join("\n");
         const features = await getAudioFeatures(token, topTracks.map(({ id }) => id));
-        document.getElementById("danceability").textContent = "danceability: " + features.danceability;
-        document.getElementById("energy").textContent = "energy: " + features.energy;
-        document.getElementById("valence").textContent = "valence: " + features.valence;
-        document.getElementById("speechiness").textContent = "speechiness: " + features.speechiness;
-        document.getElementById("instrumentalness").textContent = "instrumentalness: " + features.instrumentalness;
-        document.getElementById("acousticness").textContent = "acousticness: " + features.acousticness;
-        document.getElementById("liveness").textContent = "liveness: " + features.liveness;
-        document.getElementById("loudness").textContent = "loudness: " + features.loudness;
+        document.getElementById("danceability").textContent = "Danceability: " + features.danceability;
+        document.getElementById("energy").textContent = "Energy: " + features.energy;
+        document.getElementById("valence").textContent = "Valence: " + features.valence;
+        document.getElementById("speechiness").textContent = "Speechiness: " + features.speechiness;
+        document.getElementById("instrumentalness").textContent = "Instrumentalness: " + features.instrumentalness;
+        document.getElementById("acousticness").textContent = "Acousticness: " + features.acousticness;
+        document.getElementById("liveness").textContent = "Liveness: " + features.liveness;
+        document.getElementById("loudness").textContent = "Loudness: " + features.loudness;
     } else {
         document.getElementById("topTracks").innerText = "No top tracks found.";
     }
